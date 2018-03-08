@@ -1,0 +1,21 @@
+*{
+	font-family:tahoma;
+	font-size:18px;
+}
+body{
+	zoom:1;
+}
+div{
+	padding:5px;
+}
+input{
+	padding:2px;
+	margin:2px;
+	width:380px;
+}
+.red{
+	border:1px solid #4488FF;
+	width:400px;
+	margin:0 auto;
+	margin-bottom:10px;
+}

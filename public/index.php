@@ -80,12 +80,11 @@ $app->post('/create', function ($req, $res) {
 			
 			$db = connect_db();
 			$db->query($sql);
-			return $res->withStatus(200)->withHeader('Content-type', 'application/json');
+			return $res->withStatus(201);
 			
+		}else{
+			return $res->withStatus(400);
 		}
-		
-		//можно еще в ELSE запихать ошибочный статус
-		//$res->withStatus(400)->withHeader('Content-type', 'application/json');
 	
 	}catch(Exception $e){
 	
@@ -95,7 +94,7 @@ $app->post('/create', function ($req, $res) {
 
 //read
 //$app->get('/read/:id' - можно узать GET, можно POST, можно оба ( меня чаще POST просили )
-$app->post('/read', function ($id) use($app) {
+$app->post('/read', function ($req, $res) {
     
 	try{
 		
@@ -108,12 +107,14 @@ $app->post('/read', function ($id) use($app) {
 			";
 			
 			$db = connect_db();
-			$res = $db->query($sql);
-			while ( $row = $res->fetch_array(MYSQLI_ASSOC) ) {
+			$result = $db->query($sql);
+			while ( $row = $result->fetch_array(MYSQLI_ASSOC) ) {
 				$data[] = $row;
 			}
-			return json_encode($data[0]);
+			return $res->withJson($data[0], 200)->withHeader('Content-type', 'application/json');
 		
+		}else{
+			return $res->withStatus(400);
 		}
 
 	}catch(Exception $e){
@@ -123,10 +124,10 @@ $app->post('/read', function ($id) use($app) {
 });
 
 //update
-$app->post('/update', function ($req, $res) {
+$app->put('/update', function ($req, $res) {
 	
 	try{
-	
+		
 		if(
 			$_POST
 			&& preg_replace("/[^0-9]/", '', $_POST['id'])
@@ -147,11 +148,13 @@ $app->post('/update', function ($req, $res) {
 					`email` = '".htmlspecialchars(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))."'
 				WHERE `id` = '".preg_replace("/[^0-9]/", '', $_POST['id'])."'
 			";
-			
+
 			$db = connect_db();
 			$db->query($sql);
-			return json_encode({"status":"norm"});
+			return $res->withStatus(202);
 			
+		}else{
+			return $res->withStatus(400);
 		}
 	
 	}catch(Exception $e){
@@ -162,8 +165,8 @@ $app->post('/update', function ($req, $res) {
 });
 
 //delete
-$app->post('/delete', function ($id) use($app) {
-    
+$app->delete('/delete', function ($req, $res) use($app) {
+	
 	try{
 		
 		if(preg_replace("/[^0-9]/", '', $_POST['id']) > 0){
@@ -175,8 +178,10 @@ $app->post('/delete', function ($id) use($app) {
 			
 			$db = connect_db();
 			$db->query($sql);
-			return json_encode({"status":"norm"});
-		
+			return $res->withStatus(200);
+			
+		}else{
+			return $res->withStatus(400);
 		}
 
 	}catch(Exception $e){

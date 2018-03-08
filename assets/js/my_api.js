@@ -28,7 +28,7 @@ $(document).ready(function(){
 				id: $("#number").val(),
 			},
 			success: function(html){
-				$("#read_output").html(html);
+				$("#read_output").html(JSON.stringify(html));
 			}
 		})
 	});
@@ -45,7 +45,8 @@ $(document).ready(function(){
 				name: $("#name").val(),
 				middle_family: $("#middle_family").val(),
 				tel: $("#tel").val(),
-				email: $("#email").val()
+				email: $("#email").val(),
+				_METHOD: "PUT"
 			},
 			success: function(html){
 			}
@@ -60,6 +61,7 @@ $(document).ready(function(){
 			cache:true,
 			data: {
 				id: $("#number").val(),
+				_METHOD: "DELETE"
 			},
 			success: function(html){
 			}
